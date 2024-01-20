@@ -180,7 +180,7 @@ class MinesweeperAI():
         Marks a cell as safe, and updates all knowledge
         to mark that cell as safe as well.
         """
-        print("heheheheheehhehehe")
+        # print("heheheheheehhehehe")
         self.safes.add(cell)
         for sentence in self.knowledge:
             sentence.mark_safe(cell)
@@ -210,8 +210,8 @@ class MinesweeperAI():
                     # print(f"({i}, {j})")
                     mangoes.add((i, j))
 
-        for mango in mangoes:
-            print(mango)
+        # for mango in mangoes:
+        #     print(mango)
 
         self.moves_made.add(cell)
         self.mark_safe(cell)
@@ -224,7 +224,11 @@ class MinesweeperAI():
                 size = e.get_set_length()
                 for cell in range(size):
                     self.mark_safe(e.get_set().pop())
-            print(e.get_set())
+            elif e.get_count() == e.get_set_length():
+                size = e.get_set_length()
+                for cell in range(size):
+                    self.mark_mine(e.get_set().pop())
+            # print(e.get_set())
 
 
 
@@ -257,4 +261,5 @@ class MinesweeperAI():
                 if (i, j) in self.mines or (i, j) in self.moves_made:
                     print(f"move {(i, j)} has already been made or is booked by AI as a known mine")
                 else:
+                    print(f"move {(i, j)} made")
                     return (i, j)
