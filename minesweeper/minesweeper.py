@@ -102,16 +102,24 @@ class Sentence():
     def __str__(self):
         return f"{self.cells} = {self.count}"
 
+    def get_set(self):
+        return self.cells
+
+    def get_set_length(self):
+        return len(self.cells)
+
+    def get_count(self):
+        return self.count
     def known_mines(self):
         """
         Returns the set of all cells in self.cells known to be mines.
         """
         cell = copy.deepcopy(self.cells)
-        if len(cell) ==  self.count:
+        if len(cell) == self.count:
             return cell
         else:
             return None
-                    
+
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
@@ -130,13 +138,11 @@ class Sentence():
         if cell in self.cells:
             self.cells.remove(cell)
             self.count -= 1
-        
 
     def mark_safe(self, cell):
 
         if cell in self.cells:
             self.cells.remove(cell)
-
 
 
 class MinesweeperAI():
@@ -174,6 +180,7 @@ class MinesweeperAI():
         Marks a cell as safe, and updates all knowledge
         to mark that cell as safe as well.
         """
+        print("heheheheheehhehehe")
         self.safes.add(cell)
         for sentence in self.knowledge:
             sentence.mark_safe(cell)
@@ -193,7 +200,31 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
+        mangoes = set()
+        # print(cell)
+        for i in range(cell[0] - 1, cell[0] + 2):
+            for j in range(cell[1] - 1, cell[1] + 2):
+                if (i, j) == cell:
+                    continue
+                if 0 <= i < self.height and 0 <= j < self.width:
+                    # print(f"({i}, {j})")
+                    mangoes.add((i, j))
+
+        for mango in mangoes:
+            print(mango)
+
         self.moves_made.add(cell)
+        self.mark_safe(cell)
+
+        self.knowledge.append(Sentence(mangoes, count))
+
+        print("knowledge")
+        for e in self.knowledge:
+            if e.get_count() == 0:
+                size = e.get_set_length()
+                for cell in range(size):
+                    self.mark_safe(e.get_set().pop())
+            print(e.get_set())
 
 
 
@@ -213,8 +244,6 @@ class MinesweeperAI():
                 return move
         return None
 
-
-
     def make_random_move(self):
         """
         Returns a move to make on the Minesweeper board.
@@ -225,7 +254,7 @@ class MinesweeperAI():
         for i in range(self.width - 1):
             for j in range(self.height - 1):
 
-                if (i, j) in self.mines or (i , j) in self.moves_made:
+                if (i, j) in self.mines or (i, j) in self.moves_made:
                     print(f"move {(i, j)} has already been made or is booked by AI as a known mine")
                 else:
                     return (i, j)
