@@ -110,6 +110,7 @@ class Sentence():
 
     def get_count(self):
         return self.count
+
     def known_mines(self):
         """
         Returns the set of all cells in self.cells known to be mines.
@@ -227,10 +228,35 @@ class MinesweeperAI():
             elif e.get_count() == e.get_set_length():
                 size = e.get_set_length()
                 for cell in range(size):
-                    self.mark_mine(e.get_set().pop())
-            # print(e.get_set())
+                    the_cell = e.get_set().pop()
+                    self.mark_mine(the_cell)
+                    # for i in range(the_cell[0] - 1, the_cell[0] + 2):
+                    #     for j in range(the_cell[1] - 1, the_cell[1] + 2):
+                    #         if (i, j) == the_cell or self.mines.__contains__((i, j)) or self.moves_made.__contains__(
+                    #                 (i, j)):
+                    #             print("moving forward")
+                    #             continue
+                    #         if 0 <= i < self.height and 0 <= j < self.width:
+                    #             print(e.get_set())
 
+        for sentence in self.knowledge:
+            if sentence.get_set_length() == 0:
+                continue
+            count = 0
 
+            for cell in sentence.get_set():
+                if self.mines.__contains__(cell):
+                    count += 1
+            if sentence.count == count:
+                size = sentence.get_set_length()
+                for i in range(size):
+                    cell = sentence.get_set().pop()
+                    if self.mines.__contains__(cell) or self.moves_made.__contains__(cell):
+                        continue
+                    else:
+                        print(f"moving cell {cell} to safe moves")
+                        self.mark_safe(cell)
+            print(sentence)
 
     def make_safe_move(self):
         """
