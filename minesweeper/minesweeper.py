@@ -8,7 +8,7 @@ class Minesweeper():
     Minesweeper game representation
     """
 
-    def __init__(self, height=8, width=8, mines=8):
+    def __init__(self, height=8, width=8, mines=12):
 
         # Set initial width, height, and number of mines
         self.height = height
@@ -201,11 +201,12 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
+        print(self.moves_made)
         mangoes = set()
         # print(cell)
         for i in range(cell[0] - 1, cell[0] + 2):
             for j in range(cell[1] - 1, cell[1] + 2):
-                if (i, j) == cell:
+                if (i, j) == cell or self.moves_made.__contains__((i, j)) or self.safes.__contains__((i, j)):
                     continue
                 if 0 <= i < self.height and 0 <= j < self.width:
                     # print(f"({i}, {j})")
@@ -213,7 +214,6 @@ class MinesweeperAI():
 
         # for mango in mangoes:
         #     print(mango)
-
         self.moves_made.add(cell)
         self.mark_safe(cell)
 
@@ -229,6 +229,7 @@ class MinesweeperAI():
                 size = e.get_set_length()
                 for cell in range(size):
                     the_cell = e.get_set().pop()
+                    print(f"marking cell {cell} as mine")
                     self.mark_mine(the_cell)
                     # for i in range(the_cell[0] - 1, the_cell[0] + 2):
                     #     for j in range(the_cell[1] - 1, the_cell[1] + 2):
