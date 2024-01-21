@@ -1,7 +1,7 @@
 import itertools
 import random
 import copy
-
+from termcolor import colored
 
 class Minesweeper():
     """
@@ -151,7 +151,7 @@ class MinesweeperAI():
     Minesweeper game player
     """
 
-    def __init__(self, height=8, width=8):
+    def __init__(self, height=9, width=9):
 
         # Set initial height and width
         self.height = height
@@ -201,7 +201,7 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        print(self.moves_made)
+        # print(self.moves_made)
         mangoes = set()
         # print(cell)
         for i in range(cell[0] - 1, cell[0] + 2):
@@ -219,17 +219,19 @@ class MinesweeperAI():
 
         self.knowledge.append(Sentence(mangoes, count))
 
-        print("knowledge")
+        # print("knowledge")
         for e in self.knowledge:
             if e.get_count() == 0:
                 size = e.get_set_length()
                 for cell in range(size):
-                    self.mark_safe(e.get_set().pop())
+                    (i,j) = e.get_set().pop()
+                    print(colored(f"marking cell {(i,j)} as safe move",  'green'))
+                    self.mark_safe((i,j))
             elif e.get_count() == e.get_set_length():
                 size = e.get_set_length()
                 for cell in range(size):
                     the_cell = e.get_set().pop()
-                    print(f"marking cell {cell} as mine")
+                    print(colored(f"marking cell {the_cell} as mine", 'red'))
                     self.mark_mine(the_cell)
                     # for i in range(the_cell[0] - 1, the_cell[0] + 2):
                     #     for j in range(the_cell[1] - 1, the_cell[1] + 2):
@@ -255,7 +257,8 @@ class MinesweeperAI():
                     if self.mines.__contains__(cell) or self.moves_made.__contains__(cell):
                         continue
                     else:
-                        print(f"moving cell {cell} to safe moves")
+                        (i,j) = cell
+                        print(f"marking cell {(i,j)} as safe move")
                         self.mark_safe(cell)
             print(sentence)
 
@@ -270,7 +273,8 @@ class MinesweeperAI():
         """
         for move in self.safes:
             if move in self.moves_made:
-                print("bleh")
+                (i,j) = move
+                # print(f"safe move {(i,j)} has already been made")
             else:
                 return move
         return None
